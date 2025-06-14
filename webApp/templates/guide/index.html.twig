@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Guide index{% endblock %}
+
+{% block body %}
+    <h1>Guide index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nom</th>
+                <th>Prenom</th>
+                <th>Photo</th>
+                <th>Statut</th>
+                <th>Pays</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for guide in guides %}
+            <tr>
+                <td>{{ guide.id }}</td>
+                <td>{{ guide.nom }}</td>
+                <td>{{ guide.prenom }}</td>
+                <td>{{ guide.photo }}</td>
+                <td>{{ guide.statut ? 'Yes' : 'No' }}</td>
+                <td>{{ guide.pays }}</td>
+                <td>
+                    <a href="{{ path('app_guide_show', {'id': guide.id}) }}">show</a>
+                    <a href="{{ path('app_guide_edit', {'id': guide.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="7">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_guide_new') }}">Create new</a>
+{% endblock %}
