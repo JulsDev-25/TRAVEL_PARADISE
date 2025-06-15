@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Guide;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -15,8 +16,17 @@ class GuideForm extends AbstractType
             ->add('nom')
             ->add('prenom')
             ->add('photo')
-            ->add('statut')
             ->add('pays')
+            ->add('statut', ChoiceType::class, [
+                'choices'  => [
+                    'Actif' => true,
+                    'Inactif' => false,
+                ],
+                'expanded' => false, // dropdown select
+                'multiple' => false,
+                'label' => 'Statut',
+                'required' => true,
+            ])
         ;
     }
 

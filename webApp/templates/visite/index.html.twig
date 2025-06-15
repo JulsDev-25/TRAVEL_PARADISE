@@ -24,7 +24,7 @@
         {% for visite in visites %}
             <tr>
                 <td>{{ visite.id }}</td>
-                <td>{{ visite.photo }}</td>
+                <td><img src="{{ visite.photo }}" height="50" alt="Image_de_la_visite"></td>
                 <td>{{ visite.pays }}</td>
                 <td>{{ visite.lieu }}</td>
                 <td>{{ visite.date ? visite.date|date('Y-m-d') : '' }}</td>

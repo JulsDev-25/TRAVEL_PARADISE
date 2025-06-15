@@ -1,4 +1,35 @@
-{{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
+{{ form_start(form, {'attr': {'class': 'needs-validation', 'novalidate': 'novalidate'}}) }}
+
+<div class="mb-3">
+    {{ form_label(form.nom, null, {'label_attr': {'class': 'form-label'}}) }}
+    {{ form_widget(form.nom, {'attr': {'class': 'form-control'}}) }}
+    {{ form_errors(form.nom) }}
+</div>
+
+<div class="mb-3">
+    {{ form_label(form.prenom, null, {'label_attr': {'class': 'form-label'}}) }}
+    {{ form_widget(form.prenom, {'attr': {'class': 'form-control'}}) }}
+    {{ form_errors(form.prenom) }}
+</div>
+
+<div class="mb-3">
+    {{ form_label(form.photo, null, {'label_attr': {'class': 'form-label'}}) }}
+    {{ form_widget(form.photo, {'attr': {'class': 'form-control'}}) }}
+    {{ form_errors(form.photo) }}
+</div>
+
+<div class="mb-3">
+    {{ form_label(form.statut, null, {'label_attr': {'class': 'form-label'}}) }}
+    {{ form_widget(form.statut, {'attr': {'class': 'form-select'}}) }}
+    {{ form_errors(form.statut) }}
+</div>
+
+<div class="mb-3">
+    {{ form_label(form.pays, null, {'label_attr': {'class': 'form-label'}}) }}
+    {{ form_widget(form.pays, {'attr': {'class': 'form-control'}}) }}
+    {{ form_errors(form.pays) }}
+</div>
+
+<button type="submit" class="btn btn-primary">{{ button_label|default('Save') }}</button>
+
 {{ form_end(form) }}

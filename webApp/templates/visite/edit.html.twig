@@ -4,6 +4,7 @@
 
 {% block body %}
     <h1>Edit Visite</h1>
+    <img src="{{ visite.photo }}" height="50" alt="Image_de_la_visite">
 
     {{ include('visite/_form.html.twig', {'button_label': 'Update'}) }}
 

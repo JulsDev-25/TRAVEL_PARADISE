@@ -24,7 +24,9 @@ class VisiteForm extends AbstractType
             ->add('commentaire')
             ->add('guide', EntityType::class, [
                 'class' => Guide::class,
-                'choice_label' => 'id',
+                'choice_label' => function(Guide $guide) {
+                    return sprintf('%d - %s %s', $guide->getId(), $guide->getNom(), $guide->getPrenom());
+                },
             ])
         ;
     }

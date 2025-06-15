@@ -4,6 +4,7 @@
 
 {% block body %}
     <h1>Edit Guide</h1>
+    <img src="{{ guide.photo }}" height="50" alt="Image_de_la_visite">
 
     {{ include('guide/_form.html.twig', {'button_label': 'Update'}) }}
 

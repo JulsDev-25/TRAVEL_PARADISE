@@ -10,7 +10,12 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
+/**
+ * VisiteurController handles the CRUD operations for the Visiteur entity.
+ */
+#[IsGranted('ROLE_ADMIN')]
 #[Route('/visiteur')]
 final class VisiteurController extends AbstractController
 {
