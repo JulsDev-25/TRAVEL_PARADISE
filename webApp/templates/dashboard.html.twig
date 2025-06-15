@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block body %}
+    <h1 class="mb-4">Bienvenue sur le Dashboard</h1>
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card text-bg-primary mb-3">
+                <div class="card-header">Visiteurs</div>
+                <div class="card-body">
+                    <h5 class="card-title">Gérer les visiteurs</h5>
+                    <p class="card-text">Afficher, créer ou modifier les visiteurs enregistrés.</p>
+                    <a href="{{ path('app_visiteur_index') }}" class="btn btn-light">Voir les visiteurs</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card text-bg-success mb-3">
+                <div class="card-header">Visites</div>
+                <div class="card-body">
+                    <h5 class="card-title">Suivi des visites</h5>
+                    <p class="card-text">Consulter les visites effectuées par les visiteurs.</p>
+                    <a href="{{ path('app_visit_visiteur_index') }}" class="btn btn-light">Voir les visites</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card text-bg-warning mb-3">
+                <div class="card-header">Statistiques</div>
+                <div class="card-body">
+                    <h5 class="card-title">Tableau de bord</h5>
+                    <p class="card-text">Statistiques et rapports à venir...</p>
+                    <a href="#" class="btn btn-light disabled">Bientôt</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
