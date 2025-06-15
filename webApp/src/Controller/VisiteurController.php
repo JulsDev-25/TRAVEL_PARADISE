@@ -15,7 +15,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 /**
  * VisiteurController handles the CRUD operations for the Visiteur entity.
  */
-#[IsGranted('ROLE_ADMIN')]
+#[IsGranted('ROLE_USER')]
 #[Route('/visiteur')]
 final class VisiteurController extends AbstractController
 {

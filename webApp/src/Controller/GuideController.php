@@ -15,7 +15,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 /**
  * GuideController handles the CRUD operations for the Guide entity.
  */
-#[IsGranted('ROLE_ADMIN')]
+#[IsGranted('ROLE_USER')]
 #[Route('/guide')]
 final class GuideController extends AbstractController
 {

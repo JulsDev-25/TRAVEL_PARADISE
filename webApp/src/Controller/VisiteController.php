@@ -3,6 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\Visite;
+use App\Entity\VisitVisiteur;
+use App\Entity\Visiteur;
+use App\Form\AjoutVisiteurType;
 use App\Form\VisiteForm;
 use App\Repository\VisiteRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -14,8 +17,8 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 /**
  * VisiteController handles the CRUD operations for the Visite entity.
- */ 
-#[IsGranted('ROLE_ADMIN')]
+ */
+#[IsGranted('ROLE_USER')]
 #[Route('/visite')]
 final class VisiteController extends AbstractController
 {
@@ -34,18 +37,51 @@ final class VisiteController extends AbstractController
         $form = $this->createForm(VisiteForm::class, $visite);
         $form->handleRequest($request);
 
+        // Formulaire secondaire : ajout visiteur
+        $nouveauVisiteur = new Visiteur();
+        $formVisiteur = $this->createForm(AjoutVisiteurType::class, $nouveauVisiteur);
+        $formVisiteur->handleRequest($request);
+
+        // Soumission du petit formulaire
+        if ($formVisiteur->isSubmitted() && $formVisiteur->isValid()) {
+            $entityManager->persist($nouveauVisiteur);
+            $entityManager->flush();
+
+            // Redirige vers la même page pour réinitialiser les formulaires
+            return $this->redirectToRoute('app_visite_new');
+        }
+
+        // Soumission du formulaire de visite
         if ($form->isSubmitted() && $form->isValid()) {
+            // Sauvegarder la Visite
             $entityManager->persist($visite);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_visite_index', [], Response::HTTP_SEE_OTHER);
+            // Récupérer les visiteurs sélectionnés
+            $visiteurs = $form->get('visiteursSelectionnes')->getData();
+
+            foreach ($visiteurs as $visiteur) {
+                $visitVisiteur = new VisitVisiteur();
+                $visitVisiteur->setVisite($visite);
+                $visitVisiteur->setVisiteur($visiteur);
+                $visitVisiteur->setPresent(false);
+                $visitVisiteur->setCommentaire(null);
+
+                $entityManager->persist($visitVisiteur);
+            }
+
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app_visite_index');
         }
 
         return $this->render('visite/new.html.twig', [
             'visite' => $visite,
             'form' => $form,
+            'formVisiteur' => $formVisiteur->createView(),
         ]);
     }
+
 
     #[Route('/{id}', name: 'app_visite_show', methods: ['GET'])]
     public function show(Visite $visite): Response
@@ -76,7 +112,7 @@ final class VisiteController extends AbstractController
     #[Route('/{id}', name: 'app_visite_delete', methods: ['POST'])]
     public function delete(Request $request, Visite $visite, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$visite->getId(), $request->getPayload()->getString('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $visite->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($visite);
             $entityManager->flush();
         }

@@ -9,6 +9,8 @@
         <thead>
             <tr>
                 <th>Id</th>
+                <th>Visiteur</th>
+                <th>Visite</th>
                 <th>Present</th>
                 <th>Commentaire</th>
                 <th>actions</th>
@@ -18,6 +20,8 @@
         {% for visit_visiteur in visit_visiteurs %}
             <tr>
                 <td>{{ visit_visiteur.id }}</td>
+                <td>{{ visit_visiteur.visiteur.id }} - {{ visit_visiteur.visiteur.nom }}</td>
+                <td>{{ visit_visiteur.visite.id }} - {{ visit_visiteur.visite.lieu }}</td>
                 <td>{{ visit_visiteur.present ? 'Yes' : 'No' }}</td>
                 <td>{{ visit_visiteur.commentaire }}</td>
                 <td>
