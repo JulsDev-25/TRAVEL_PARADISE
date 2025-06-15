@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Visite;
 use App\Repository\GuideRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -82,7 +83,7 @@ class Guide
         return $this;
     }
 
-    public function isStatut(): ?bool
+    public function getStatut(): ?bool
     {
         return $this->statut;
     }
@@ -127,7 +128,6 @@ class Guide
     public function removeVisite(Visite $visite): static
     {
         if ($this->visites->removeElement($visite)) {
-            // set the owning side to null (unless already changed)
             if ($visite->getGuide() === $this) {
                 $visite->setGuide(null);
             }

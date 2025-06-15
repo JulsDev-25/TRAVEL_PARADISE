@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Guide{% endblock %}
+
+{% block body %}
+    <h1>Guide</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ guide.id }}</td>
+            </tr>
+            <tr>
+                <th>Photo</th>
+                <td><img src="{{ guide.photo }}" height="50" alt="Photo_guide"></td>
+            </tr>
+            <tr>
+                <th>Nom</th>
+                <td>{{ guide.nom }}</td>
+            </tr>
+            <tr>
+                <th>Prenom</th>
+                <td>{{ guide.prenom }}</td>
+            </tr>
+            <tr>
+                <th>Statut</th>
+                <td>{{ guide.statut ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>Pays</th>
+                <td>{{ guide.pays }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_guide_index') }}">back to list</a>
+
+    <a href="{{ path('app_guide_edit', {'id': guide.id}) }}">edit</a>
+
+    {{ include('guide/_delete_form.html.twig') }}
+{% endblock %}

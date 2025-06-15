@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\VisiteRepository;
+use App\Entity\Guide;
+use App\Entity\VisitVisiteur;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -41,7 +43,7 @@ class Visite
     private ?string $commentaire = null;
 
     #[ORM\ManyToOne(inversedBy: 'visites')]
-    private ?guide $guide = null;
+    private ?Guide $guide = null;
 
     /**
      * @var Collection<int, VisitVisiteur>
@@ -155,12 +157,12 @@ class Visite
         return $this;
     }
 
-    public function getGuide(): ?guide
+    public function getGuide(): ?Guide
     {
         return $this->guide;
     }
 
-    public function setGuide(?guide $guide): static
+    public function setGuide(?Guide $guide): static
     {
         $this->guide = $guide;
 
@@ -188,7 +190,6 @@ class Visite
     public function removeVisitVisiteur(VisitVisiteur $visitVisiteur): static
     {
         if ($this->visitVisiteurs->removeElement($visitVisiteur)) {
-            // set the owning side to null (unless already changed)
             if ($visitVisiteur->getVisite() === $this) {
                 $visitVisiteur->setVisite(null);
             }

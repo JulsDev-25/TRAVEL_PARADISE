@@ -1,0 +1,51 @@
+<?php
+
+namespace App\Form;
+
+use App\Entity\Guide;
+use App\Entity\Visite;
+use App\Entity\Visiteur;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+
+class VisiteForm extends AbstractType
+{
+    public function buildForm(FormBuilderInterface $builder, array $options): void
+    {
+        $builder
+            ->add('photo')
+            ->add('pays')
+            ->add('lieu')
+            ->add('date')
+            ->add('heureDebut')
+            ->add('duree')
+            ->add('heureFin')
+            ->add('commentaire')
+            ->add('guide', EntityType::class, [
+                'class' => Guide::class,
+                'choice_label' => function (Guide $guide) {
+                    return sprintf('%d - %s %s', $guide->getId(), $guide->getNom(), $guide->getPrenom());
+                },
+            ])
+            ->add('visiteursSelectionnes', EntityType::class, [
+                'class' => Visiteur::class,
+                'choice_label' => function (Visiteur $visiteur) {
+                    return $visiteur->getPrenom() . ' ' . $visiteur->getNom();
+                },
+                'multiple' => true,
+                'expanded' => true, // sous forme de cases à cocher
+                'mapped' => false,  // très important : ce champ ne correspond pas à une propriété Doctrine
+                'required' => false,
+                'label' => 'Visiteurs participant à la visite',
+            ]);;
+    }
+
+    public function configureOptions(OptionsResolver $resolver): void
+    {
+        $resolver->setDefaults([
+            'data_class' => Visite::class,
+        ]);
+    }
+}

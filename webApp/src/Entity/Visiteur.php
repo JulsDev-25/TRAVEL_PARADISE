@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\VisitVisiteur;
 use App\Repository\VisiteurRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -82,7 +83,6 @@ class Visiteur
     public function removeVisitVisiteur(VisitVisiteur $visitVisiteur): static
     {
         if ($this->visitVisiteurs->removeElement($visitVisiteur)) {
-            // set the owning side to null (unless already changed)
             if ($visitVisiteur->getVisiteur() === $this) {
                 $visitVisiteur->setVisiteur(null);
             }

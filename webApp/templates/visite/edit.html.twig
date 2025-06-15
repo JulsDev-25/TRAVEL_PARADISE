@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Visite{% endblock %}
+
+{% block body %}
+    <h1>Edit Visite</h1>
+    <img src="{{ visite.photo }}" height="50" alt="Image_de_la_visite">
+
+    {{ include('visite/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <hr>
+    <h3>Ajouter un nouveau visiteur</h3>
+
+    {{ form_start(formVisiteur) }}
+        {{ form_row(formVisiteur.nom) }}
+        {{ form_row(formVisiteur.prenom) }}
+    {{ form_end(formVisiteur) }}
+
+    <a href="{{ path('app_visite_index') }}">back to list</a>
+
+    {{ include('visite/_delete_form.html.twig') }}
+{% endblock %}
