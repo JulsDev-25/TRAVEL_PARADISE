@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}VisitVisiteur{% endblock %}
+
+{% block body %}
+    <h1>VisitVisiteur</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ visit_visiteur.id }}</td>
+            </tr>
+            <tr>
+                <th>Present</th>
+                <td>{{ visit_visiteur.present ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>Commentaire</th>
+                <td>{{ visit_visiteur.commentaire }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_visit_visiteur_index') }}">back to list</a>
+
+    <a href="{{ path('app_visit_visiteur_edit', {'id': visit_visiteur.id}) }}">edit</a>
+
+    {{ include('visit_visiteur/_delete_form.html.twig') }}
+{% endblock %}

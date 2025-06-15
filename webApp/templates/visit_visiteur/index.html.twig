@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}VisitVisiteur index{% endblock %}
+
+{% block body %}
+    <h1>VisitVisiteur index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Present</th>
+                <th>Commentaire</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for visit_visiteur in visit_visiteurs %}
+            <tr>
+                <td>{{ visit_visiteur.id }}</td>
+                <td>{{ visit_visiteur.present ? 'Yes' : 'No' }}</td>
+                <td>{{ visit_visiteur.commentaire }}</td>
+                <td>
+                    <a href="{{ path('app_visit_visiteur_show', {'id': visit_visiteur.id}) }}">show</a>
+                    <a href="{{ path('app_visit_visiteur_edit', {'id': visit_visiteur.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_visit_visiteur_new') }}">Create new</a>
+{% endblock %}
