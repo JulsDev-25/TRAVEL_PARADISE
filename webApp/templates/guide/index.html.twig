@@ -21,9 +21,9 @@
         {% for guide in guides %}
             <tr>
                 <td>{{ guide.id }}</td>
+                <td><img src="{{ guide.photo }}" width="100" alt="Photo_guide"></td>
                 <td>{{ guide.nom }}</td>
                 <td>{{ guide.prenom }}</td>
-                <td>{{ guide.photo }}</td>
                 <td>{{ guide.statut ? 'Yes' : 'No' }}</td>
                 <td>{{ guide.pays }}</td>
                 <td>

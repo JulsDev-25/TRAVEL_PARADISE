@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\VisitVisiteurRepository;
+use App\Entity\Visite;
+use App\Entity\Visiteur;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -21,10 +23,10 @@ class VisitVisiteur
     private ?string $commentaire = null;
 
     #[ORM\ManyToOne(inversedBy: 'visitVisiteurs')]
-    private ?visite $visite = null;
+    private ?Visite $visite = null;
 
     #[ORM\ManyToOne(inversedBy: 'visitVisiteurs')]
-    private ?visiteur $visiteur = null;
+    private ?Visiteur $visiteur = null;
 
     public function getId(): ?int
     {
@@ -55,24 +57,24 @@ class VisitVisiteur
         return $this;
     }
 
-    public function getVisite(): ?visite
+    public function getVisite(): ?Visite
     {
         return $this->visite;
     }
 
-    public function setVisite(?visite $visite): static
+    public function setVisite(?Visite $visite): static
     {
         $this->visite = $visite;
 
         return $this;
     }
 
-    public function getVisiteur(): ?visiteur
+    public function getVisiteur(): ?Visiteur
     {
         return $this->visiteur;
     }
 
-    public function setVisiteur(?visiteur $visiteur): static
+    public function setVisiteur(?Visiteur $visiteur): static
     {
         $this->visiteur = $visiteur;
 
