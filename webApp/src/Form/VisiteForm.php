@@ -14,6 +14,9 @@ class VisiteForm extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        /** @var Visite $visite */
+        $visite = $options['data'];
+
         $builder
             ->add('photo')
             ->add('pays')
@@ -31,15 +34,14 @@ class VisiteForm extends AbstractType
             ])
             ->add('visiteursSelectionnes', EntityType::class, [
                 'class' => Visiteur::class,
-                'choice_label' => function (Visiteur $visiteur) {
-                    return $visiteur->getPrenom() . ' ' . $visiteur->getNom();
-                },
+                'choice_label' => fn(Visiteur $v) => $v->getPrenom() . ' ' . $v->getNom(),
                 'multiple' => true,
-                'expanded' => true, // sous forme de cases à cocher
-                'mapped' => false,  // très important : ce champ ne correspond pas à une propriété Doctrine
+                'expanded' => true,
+                'mapped' => false,
                 'required' => false,
                 'label' => 'Visiteurs participant à la visite',
-            ]);;
+                'data' => $visite->getVisiteursSelectionnes(), // 💡 Cette ligne est la clé
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

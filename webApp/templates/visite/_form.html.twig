@@ -1,4 +1,91 @@
-{{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
+{{ form_start(form, {'attr': {'class': 'needs-validation', 'novalidate': 'novalidate'}}) }}
+
+<div class="row">
+	<div class="col-md-6 mb-3">
+		{{ form_row(form.photo) }}
+	</div>
+	<div class="col-md-6 mb-3">
+		{{ form_row(form.pays) }}
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-md-6 mb-3">
+		{{ form_row(form.lieu) }}
+	</div>
+	<div class="col-md-6 mb-3">
+		{{ form_row(form.date) }}
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-md-4 mb-3">
+		{{ form_row(form.heureDebut) }}
+	</div>
+	<div class="col-md-4 mb-3">
+		{{ form_row(form.duree) }}
+	</div>
+	<div class="col-md-4 mb-3">
+		{{ form_row(form.heureFin) }}
+	</div>
+</div>
+
+<div class="mb-3">
+	{{ form_row(form.commentaire) }}
+</div>
+
+<div class="mb-3">
+	{{ form_row(form.guide) }}
+</div>
+
+<div class="card border-secondary mb-4">
+	<div class="card-header bg-secondary text-white">
+		<strong>Visiteurs participant à la visite</strong>
+	</div>
+	<div class="card-body">
+		{% if form.visiteursSelectionnes is defined %}
+			<div class="row">
+				{{ form_row(form.visiteursSelectionnes) }}
+			</div>
+		{% else %}
+			<p class="text-muted">Aucun visiteur à afficher.</p>
+		{% endif %}
+	</div>
+</div>
+
+<h2>Visteurs</h2>
+{% for v in visite.visiteursSelectionnes %}
+	<p style="color: green"> -
+		{{ v.nom }}
+		{{ v.prenom }}</p>
+{% endfor %}
+<button type="submit" class="btn btn-primary mt-3">{{ button_label|default('Enregistrer') }}</button>
+
 {{ form_end(form) }}
+
+<hr
+class="my-4">
+<!-- Formulaire pour ajouter un visiteur à la volée -->
+<div class="mb-4">
+	<button class="btn btn-outline-primary mb-3" type="button" data-bs-toggle="collapse" data-bs-target="#formVisiteurCollapse" aria-expanded="false" aria-controls="formVisiteurCollapse">
+		➕ Ajouter un nouveau visiteur
+	</button>
+
+	<div class="collapse" id="formVisiteurCollapse">
+		<div class="card card-body border-primary">
+			{{ form_start(formVisiteur) }}
+			<div class="row">
+				<div class="col-md-6">
+					{{ form_row(formVisiteur.nom) }}
+				</div>
+				<div class="col-md-6">
+					{{ form_row(formVisiteur.prenom) }}
+				</div>
+			</div>
+			<button type="submit" class="btn btn-success mt-2">
+				{{ formVisiteur.save.vars.label|default('Ajouter') }}
+			</button>
+			{{ form_end(formVisiteur) }}
+		</div>
+	</div>
+</div>

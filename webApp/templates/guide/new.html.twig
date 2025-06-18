@@ -1,11 +1,12 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New Guide{% endblock %}
+{% block title %}Nouveau guide{% endblock %}
 
 {% block body %}
-    <h1>Create new Guide</h1>
+
+    <h1 class="mb-4">Créer un nouveau guide</h1>
 
     {{ include('guide/_form.html.twig') }}
 
-    <a href="{{ path('app_guide_index') }}">back to list</a>
+    <a href="{{ path('app_guide_index') }}" class="btn btn-secondary mt-3">Retour à la liste</a>
 {% endblock %}

@@ -1,31 +1,35 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Guide{% endblock %}
+{% block title %}Détails du guide{% endblock %}
 
 {% block body %}
-    <h1>Guide</h1>
+    <h1 class="mb-4">Détails du guide</h1>
 
-    <table class="table">
+    <table class="table table-bordered">
         <tbody>
             <tr>
-                <th>Id</th>
+                <th>ID</th>
                 <td>{{ guide.id }}</td>
             </tr>
             <tr>
                 <th>Photo</th>
-                <td><img src="{{ guide.photo }}" height="50" alt="Photo_guide"></td>
+                <td><img src="{{ guide.photo }}" height="80" alt="Photo guide"></td>
             </tr>
             <tr>
                 <th>Nom</th>
                 <td>{{ guide.nom }}</td>
             </tr>
             <tr>
-                <th>Prenom</th>
+                <th>Prénom</th>
                 <td>{{ guide.prenom }}</td>
             </tr>
             <tr>
                 <th>Statut</th>
-                <td>{{ guide.statut ? 'Yes' : 'No' }}</td>
+                <td>
+                    <span class="badge bg-{{ guide.statut ? 'success' : 'secondary' }}">
+                        {{ guide.statut ? 'Actif' : 'Inactif' }}
+                    </span>
+                </td>
             </tr>
             <tr>
                 <th>Pays</th>
@@ -34,9 +38,9 @@
         </tbody>
     </table>
 
-    <a href="{{ path('app_guide_index') }}">back to list</a>
-
-    <a href="{{ path('app_guide_edit', {'id': guide.id}) }}">edit</a>
-
-    {{ include('guide/_delete_form.html.twig') }}
+    <div class="mt-3">
+        <a href="{{ path('app_guide_index') }}" class="btn btn-secondary">Retour à la liste</a>
+        <a href="{{ path('app_guide_edit', {'id': guide.id}) }}" class="btn btn-warning">Modifier</a>
+        {{ include('guide/_delete_form.html.twig') }}
+    </div>
 {% endblock %}

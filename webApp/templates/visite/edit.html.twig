@@ -1,22 +1,30 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit Visite{% endblock %}
+{% block title %}Modifier une visite
+{% endblock %}
 
 {% block body %}
-    <h1>Edit Visite</h1>
-    <img src="{{ visite.photo }}" height="50" alt="Image_de_la_visite">
+	{# alert de notification #}
+	{% for message in app.flashes('success') %}
+		<div class="alert alert-success alert-dismissible fade show" role="alert">
+			{{ message }}
+			<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fermer"></button>
+		</div>
+	{% endfor %}
+	{% for message in app.flashes('error') %}
+		<div class="alert alert-danger">{{ message }}</div>
+	{% endfor %}
 
-    {{ include('visite/_form.html.twig', {'button_label': 'Update'}) }}
+	<div class="container">
+		<h1 class="mb-4">Modifier une visite</h1>
 
-    <hr>
-    <h3>Ajouter un nouveau visiteur</h3>
+		{{ include('visite/_form.html.twig', {
+            form: form,
+            button_label: 'Mettre à jour'
+        }) }}
 
-    {{ form_start(formVisiteur) }}
-        {{ form_row(formVisiteur.nom) }}
-        {{ form_row(formVisiteur.prenom) }}
-    {{ form_end(formVisiteur) }}
-
-    <a href="{{ path('app_visite_index') }}">back to list</a>
-
-    {{ include('visite/_delete_form.html.twig') }}
+		<div class="mt-4">
+			<a href="{{ path('app_visite_index') }}" class="btn btn-secondary">Retour à la liste</a>
+		</div>
+	</div>
 {% endblock %}

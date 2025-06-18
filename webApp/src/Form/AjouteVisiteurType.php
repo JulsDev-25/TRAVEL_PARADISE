@@ -14,8 +14,7 @@ class AjoutVisiteurType extends AbstractType
     {
         $builder
             ->add('nom')
-            ->add('prenom')
-            ->add('save', SubmitType::class, ['label' => 'Ajouter le visiteur']);
+            ->add('prenom');
     }
 
     public function configureOptions(OptionsResolver $resolver): void

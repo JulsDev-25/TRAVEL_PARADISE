@@ -197,4 +197,18 @@ class Visite
 
         return $this;
     }
+
+    // remplire le tableau des visiteurs sélectionnés
+    
+    private ?array $visiteursSelectionnes = [];
+
+    public function getVisiteursSelectionnes(): ?array
+    {
+        return $this->visiteursSelectionnes;
+    }
+
+    public function setVisiteursSelectionnes(?array $visiteursSelectionnes): void
+    {
+        $this->visiteursSelectionnes = $visiteursSelectionnes;
+    }
 }
