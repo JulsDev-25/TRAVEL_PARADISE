@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Bienvenue chez Travel Paradise</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary-color: #003366;
+      --primary-light: #1a4d7a;
+      --primary-dark: #001a33;
+      --accent-color: #00a8cc;
+      --accent-warm: #ff7b54;
+      --text-light: #e8f4f8;
+      --text-muted: #b8d4e3;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body, html {
+      font-family: 'Inter', sans-serif;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    .main-container {
+      height: 100vh;
+      background: 
+        linear-gradient(135deg, rgba(0, 51, 102, 0.5), rgba(0, 168, 204, 0.3), rgba(0, 51, 102, 0.6)),
+        url('{{ asset("images/paysage_bg.jpg") }}') center/cover no-repeat;
+      color: var(--text-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      text-align: center;
+      padding: 2rem;
+    }
+
+    .overlay {
+      background: rgba(0, 0, 0, 0.4);
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+    }
+
+    .content {
+      position: relative;
+      z-index: 2;
+      max-width: 700px;
+    }
+
+    .title {
+      font-size: 3rem;
+      font-weight: 800;
+      font-family: 'Poppins', sans-serif;
+      margin-bottom: 1rem;
+      box-shadow: 0 10px 30px rgba(0, 168, 204, 0.6);
+    }
+
+    .subtitle {
+      font-size: 1.2rem;
+      color: var(--text-muted);
+      margin-bottom: 2rem;
+    }
+
+    .cta-button {
+      background-color: var(--primary-light);
+      color: white;
+      padding: 0.8rem 2rem;
+      border: none;
+      border-radius: 30px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      text-decoration: none;
+    }
+
+    .cta-button:hover {
+      background-color: var(--accent-color);
+    }
+
+    .logo {
+      border-radius: 20px;
+      position: absolute;
+      top: 20px;
+      left: 40px;
+      z-index: 999;
+      box-shadow: 0 10px 30px rgba(0, 168, 204, 0.6);
+      width: 60px;
+      transform: translateY(-20px);
+      animation: logoFloat 3s ease-in-out infinite;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .logo:hover {
+      transform: translateY(-4px) scale(1.02);
+      box-shadow: 
+        0 25px 50px rgba(0, 51, 102, 0.5),
+        0 12px 24px rgba(0, 168, 204, 0.4),
+        0 0 0 6px rgba(255, 255, 255, 0.15);
+    }
+
+    .logo:hover {
+      transform: scale(1.1) rotate(5deg);
+      box-shadow: 0 10px 30px rgba(0, 168, 204, 0.6);
+    }
+
+    @keyframes logoFloat {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+
+    footer {
+      position: absolute;
+      bottom: 15px;
+      width: 100%;
+      text-align: center;
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 0.9rem;
+      z-index: 999;
+    }
+
+    @media (max-width: 768px) {
+      .title {
+        font-size: 2.2rem;
+      }
+      .subtitle {
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <img src="{{ asset('img/logo.png') }}" class="logo" alt="travel-paradise logo"> 
+
+  <div class="main-container">
+    <div class="overlay"></div>
+    <div class="content">
+      <h1 class="title">Travel Paradise</h1>
+      <p class="subtitle">Bienvenue dans notre plateforme de gestion des guides touristiques</p>
+      <a href="{{ path('app_login') }}" class="cta-button">Commencer l'aventure</a>
+    </div>
+  </div>
+
+  <footer>
+    <small>&copy; {{ "now"|date("Y") }} Travel Paradise — Tous droits réservés</small>
+  </footer>
+</body>
+</html>
