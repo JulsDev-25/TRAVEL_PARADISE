@@ -1,78 +1,169 @@
-import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export default function HomePage({navigation}) {
+function getFirstDayOfMonth(dateStr) {
+    // Extrait année-mois et ajoute "-01" pour le premier jour du mois
+    return dateStr.slice(0, 7) + '-01';
+}
+
+export default function HomePage({ navigation }) {
     const insets = useSafeAreaInsets();
+    const [visites, setVisites] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [markedDates, setMarkedDates] = useState({});
+    const [stats, setStats] = useState({ past: 0, upcoming: 0, ongoing: 0 });
+
+    const today = new Date().toISOString().split('T')[0];
+    const [currentMonth, setCurrentMonth] = useState(getFirstDayOfMonth(today));
+    const [refreshKey, setRefreshKey] = useState(0); // clé pour forcer rerender
+
+    useEffect(() => {
+        const fetchVisites = async () => {
+            try {
+                const token = await AsyncStorage.getItem('userToken');
+                if (!token) return;
+
+                const response = await axios.get('https://a131-2a02-2788-1004-1df-bd68-6d3f-ef16-8362.ngrok-free.app/api/visites', {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+
+                const data = response.data;
+
+                const marks = {};
+                let past = 0, upcoming = 0, ongoing = 0;
+
+                data.forEach(visite => {
+                    const date = visite.date.split('T')[0];
+                    marks[date] = {
+                        selected: true,
+                        marked: true,
+                        selectedColor: '#003366',
+                        dotColor: '#003366'
+                    };
+
+                    if (date < today) past++;
+                    else if (date > today) upcoming++;
+                    else ongoing++;
+                });
+
+                // Mettre en surbrillance la date d’aujourd’hui (couleur différente)
+                marks[today] = {
+                    ...(marks[today] || {}),
+                    selected: true,
+                    selectedColor: '#00B4D8'
+                };
+
+                setVisites(data);
+                setMarkedDates(marks);
+                setStats({ past, upcoming, ongoing });
+            } catch (error) {
+                console.error("Erreur API :", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchVisites();
+    }, []);
+
+    const handleDayPress = (day) => {
+        const visiteDuJour = visites.find(v => v.date.startsWith(day.dateString));
+        if (visiteDuJour) {
+            navigation.navigate('Description', { visite: visiteDuJour });
+        }
+    };
+
+    const onPressResetMonth = () => {
+        // Réinitialise au mois actuel (premier jour du mois) et force rerender via refreshKey
+        setCurrentMonth(getFirstDayOfMonth(today));
+        setRefreshKey(prev => prev + 1);
+    };
+
+    const Stat = ({ label, value }) => (
+        <View style={{ alignItems: 'center' }}>
+            <Text style={{ color: '#003366', fontWeight: 'bold' }}>{value}</Text>
+            <Text style={{ fontSize: 12, color: 'gray' }}>{label}</Text>
+        </View>
+    );
 
     return (
-        <ScrollView style={[styles.container, { paddingTop: insets.top }]}>
-            {/* Header */}
+        <View style={[styles.container, { paddingTop: insets.top }]}>
             <View style={styles.header}>
-                <Ionicons name="menu" size={28} color="#00224D" />
+                <Ionicons name="menu" size={28} color="#003366" />
                 <Text style={styles.headerTitle}>Travel Paradise</Text>
-                <Image
-                    source={require('../assets/logo.png')} // image de profil fictive
-                    style={styles.profileImage}
-                />
+                <Image source={require('../assets/logo.png')} style={styles.profileImage} />
             </View>
 
-            {/* Dernière visite */}
-            <TouchableOpacity 
-                style={styles.lastVisitCard}
-                onPress={() => navigation.navigate('Description')}
-            >
-                <View style={{ position: 'absolute', marginTop: 9, marginLeft: 16, backgroundColor: "#0A436D", width: 35, height: 35, alignItems: "center", justifyContent: "center", borderRadius: 30 }}>
-                    <MaterialIcons name="push-pin" size={22} color="white" />
-                </View>
-                <Text style={styles.lastVisitTitle}>Dernière visite</Text>
-                <Text style={styles.location}>Visite du mont Cameroun</Text>
-                <View style={styles.lastVisitFooter}>
-                    <View style={{ flexDirection: 'row' }}>
-                        <MaterialIcons name="location-on" size={18} color="white" />
-                        <Text style={styles.footerText}>Gembloux</Text>
-                    </View>
-                    <Text style={styles.footerText}>Last-week</Text>
-                </View>
-            </TouchableOpacity>
+            <ScrollView style={{ paddingTop: 10 }}>
+                {loading ? (
+                    <ActivityIndicator style={{ marginTop: "70%" }} size="large" color="#003366" />
+                ) : (
+                    <>
+                        {visites.length > 0 && (
+                            <TouchableOpacity
+                                style={styles.lastVisitCard}
+                                onPress={() => navigation.navigate('Description', { visite: visites[0] })}
+                            >
+                                <View style={styles.pin}>
+                                    <MaterialIcons name="push-pin" size={22} color="white" />
+                                </View>
+                                <Text style={styles.lastVisitTitle}>Dernière visite</Text>
+                                <Text style={styles.location}>{visites[0].lieu}</Text>
+                                <View style={styles.lastVisitFooter}>
+                                    <View style={{ flexDirection: 'row' }}>
+                                        <MaterialIcons name="location-on" size={18} color="white" />
+                                        <Text style={styles.footerText}>{visites[0].pays}</Text>
+                                    </View>
+                                    <Text style={styles.footerText}>{visites[0].date.split('T')[0]}</Text>
+                                </View>
+                            </TouchableOpacity>
+                        )}
 
-            {/* Total visite */}
-            <View style={styles.totalCard}>
-                <View>
-                    <Text style={styles.totalLabel}>Total visite</Text>
-                    <Text style={styles.totalSubLabel}>Last-month</Text>
-                </View>
-                <View style={styles.totalCount}>
-                    <Text style={styles.totalCountText}>9</Text>
-                </View>
-            </View>
+                        <View style={[styles.totalCard, { flexDirection: 'column', alignItems: 'flex-start' }]}>
+                            <Text style={styles.totalLabel}>Statistiques des visites</Text>
+                            <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%', marginTop: 10 }}>
+                                <Stat label="Total" value={visites.length} />
+                                <Stat label="Passées" value={stats.past} />
+                                <Stat label="À venir" value={stats.upcoming} />
+                                <Stat label="En cours" value={stats.ongoing} />
+                            </View>
+                        </View>
 
-            {/* Calendrier */}
-            <Text style={styles.calendarTitle}>Visites</Text>
-            <Calendar
-                current={'2025-05-01'}
-                markedDates={{
-                    '2025-05-10': { selected: true, marked: true, selectedColor: '#041562' },
-                    '2025-05-13': { selected: true, marked: true, selectedColor: '#00B4D8' },
-                    '2025-05-22': { selected: true, marked: true, selectedColor: '#041562' },
-                    '2025-05-26': { selected: true, marked: true, selectedColor: '#041562' },
-                }}
-                theme={{
-                    backgroundColor: '#ffffff',
-                    calendarBackground: '#ffffff',
-                    todayTextColor: '#00224D',
-                    dayTextColor: '#00224D',
-                    monthTextColor: '#00224D',
-                    arrowColor: '#00224D',
-                }}
-                style={styles.calendar}
-            />
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
+                            <Text style={styles.calendarTitle}>Visites</Text>
+                            <TouchableOpacity onPress={onPressResetMonth}>
+                                <Text style={styles.resetText}>📅 Aujourd'hui</Text>
+                            </TouchableOpacity>
+                        </View>
 
-            {/* Bottom padding */}
-            <View style={{ height: 40 }} />
-        </ScrollView>
+                        <Calendar
+                            key={refreshKey} // clé forcée pour forcer re-render
+                            current={currentMonth}
+                            markedDates={markedDates}
+                            onDayPress={handleDayPress}
+                            onPressArrowLeft={subtractMonth => subtractMonth()}
+                            onPressArrowRight={addMonth => addMonth()}
+                            theme={{
+                                backgroundColor: '#ffffff',
+                                calendarBackground: '#ffffff',
+                                todayTextColor: '#003366',
+                                dayTextColor: '#003366',
+                                monthTextColor: '#003366',
+                                arrowColor: '#003366',
+                            }}
+                            style={styles.calendar}
+                        />
+                    </>
+                )}
+
+                <View style={{ height: 40 }} />
+            </ScrollView>
+        </View>
     );
 }
 
@@ -86,12 +177,14 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        marginBottom: 20,
+        paddingBottom: 10,
+        borderBottomWidth: 1,
+        borderColor: '#00336620',
     },
     headerTitle: {
         fontSize: 20,
         fontWeight: 'bold',
-        color: '#00224D',
+        color: '#003366',
     },
     profileImage: {
         width: 36,
@@ -99,12 +192,23 @@ const styles = StyleSheet.create({
         borderRadius: 20,
     },
     lastVisitCard: {
-        backgroundColor: '#041562',
+        backgroundColor: '#003366',
         borderRadius: 20,
         padding: 16,
         marginBottom: 16,
         height: 150,
         justifyContent: "space-between"
+    },
+    pin: {
+        position: 'absolute',
+        marginTop: 9,
+        marginLeft: 16,
+        backgroundColor: "#0A436D",
+        width: 35,
+        height: 35,
+        alignItems: "center",
+        justifyContent: "center",
+        borderRadius: 30
     },
     lastVisitTitle: {
         color: '#A5D7E8',
@@ -133,38 +237,27 @@ const styles = StyleSheet.create({
         borderRadius: 12,
         padding: 16,
         marginBottom: 16,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
     },
     totalLabel: {
-        color: '#00224D',
-        fontSize: 15,
+        color: '#003366',
+        fontSize: 18,
         fontWeight: 'bold',
+        marginBottom: 10
     },
-    totalSubLabel: {
-        color: 'gray',
-        fontSize: 12,
-        marginTop: 15
-    },
-    totalCount: {
-        backgroundColor: '#00224D',
-        borderRadius: 20,
-        width: 32,
-        height: 32,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    totalCountText: {
-        color: 'white',
-        fontWeight: 'bold',
+    resetText: {
+        textAlign: 'center',
+        color: '#003366',
+        marginTop: 5,
+        fontSize: 14,
+        marginBottom: 5,
     },
     calendarTitle: {
         fontSize: 18,
         fontWeight: 'bold',
-        color: '#00224D',
-        marginTop: 15,
+        color: '#003366',
+        marginTop: 10,
         marginBottom: 15,
+        marginLeft: 16,
     },
     calendar: {
         borderRadius: 20,
