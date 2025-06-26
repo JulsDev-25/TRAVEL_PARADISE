@@ -32,7 +32,7 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ path('app_dashboard') }}">Dashboard</a>
+                        <a class="nav-link active" href="{{ path('app_dashboard') }}">Dashboard</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ path('app_guide_index') }}">Guides</a>
@@ -49,7 +49,6 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{{ path('app_user_index') }}">Utilisateurs</a>
                     </li>
-                    <!-- Ajoute ici d'autres liens selon tes routes -->
                 </ul>
             </div>
         </div>
@@ -60,7 +59,7 @@
         {% block body %}{% endblock %}
     </main>
 
-    <footer class="text-center mt-5">
+    <footer class="text-center mt-5 position-absolute bottom-0 w-100">
         <small>&copy; {{ "now"|date("Y") }} TravelParadise</small>
     </footer>
     {% block javascripts %}
