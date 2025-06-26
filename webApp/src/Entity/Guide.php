@@ -2,11 +2,13 @@
 
 namespace App\Entity;
 
+use App\Entity\User;
 use App\Entity\Visite;
 use App\Repository\GuideRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: GuideRepository::class)]
 class Guide
@@ -14,6 +16,7 @@ class Guide
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['visite:item', 'visite:detail'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
@@ -104,6 +107,22 @@ class Guide
     {
         $this->pays = $pays;
 
+        return $this;
+    }
+
+
+    //Rélation avec l'entité User
+    #[ORM\OneToOne(mappedBy: 'guide', targetEntity: User::class)]
+    private ?User $user = null;
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
         return $this;
     }
 

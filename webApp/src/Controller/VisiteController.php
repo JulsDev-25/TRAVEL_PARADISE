@@ -86,6 +86,7 @@ final class VisiteController extends AbstractController
 
     $visiteursPreselectionnes = array_map(fn($r) => $r->getVisiteur(), $visiteursVisite);
     $visite->setVisiteursSelectionnes($visiteursPreselectionnes);
+    
     return $this->render('visite/show.html.twig', [
       'visite' => $visite,
     ]);

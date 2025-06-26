@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+// Correction du namespace du repository
 use App\Repository\VisiteRepository;
 use App\Entity\Guide;
 use App\Entity\VisitVisiteur;
@@ -9,6 +10,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: VisiteRepository::class)]
 class Visite
@@ -16,39 +18,67 @@ class Visite
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    // Ajout de 'visite:item' pour le détail
+    #[Groups(['visite:read', 'visite:item'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    // Ajout de 'visite:item' pour le détail
+    #[Groups(['visite:read', 'visite:item'])]
     private ?string $photo = null;
 
     #[ORM\Column(length: 255)]
+    // Ajout de 'visite:item' pour le détail
+    #[Groups(['visite:read', 'visite:item'])]
     private ?string $pays = null;
 
     #[ORM\Column(length: 255)]
+    // Ajout de 'visite:item' pour le détail
+    #[Groups(['visite:read', 'visite:item'])]
     private ?string $lieu = null;
 
+    // Correction du type de date
     #[ORM\Column(type: Types::DATE_MUTABLE)]
-    private ?\DateTime $date = null;
+    // Ajout de 'visite:item' pour le détail
+    #[Groups(['visite:read', 'visite:item'])]
+    private ?\DateTimeInterface $date = null; // Utilisation de DateTimeInterface
 
+    // Correction du type d'heure
     #[ORM\Column(type: Types::TIME_MUTABLE)]
-    private ?\DateTime $heureDebut = null;
+    // Ajout de 'visite:item' pour le détail
+    #[Groups(['visite:read', 'visite:item'])]
+    private ?\DateTimeInterface $heureDebut = null; // Utilisation de DateTimeInterface
 
     #[ORM\Column]
+    // Ajout de 'visite:item' pour le détail
+    #[Groups(['visite:read', 'visite:item'])]
     private ?int $duree = null;
 
+    // Correction du type d'heure
     #[ORM\Column(type: Types::TIME_MUTABLE)]
-    private ?\DateTime $heureFin = null;
+    #[Groups(['visite:read', 'visite:item'])]
+    private ?\DateTimeInterface $heureFin = null; // Utilisation de DateTimeInterface
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Groups(['visite:read', 'visite:item'])]
     private ?string $commentaire = null;
 
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(['visite:read', 'visite:item', 'visit:update'])]
+    private ?string $commentaireFin = null;
+
     #[ORM\ManyToOne(inversedBy: 'visites')]
+    #[ORM\JoinColumn(nullable: false)]
+    // Ajout de 'visite:item' pour le détail
+    #[Groups(['visite:read', 'visite:item'])]
     private ?Guide $guide = null;
 
     /**
      * @var Collection<int, VisitVisiteur>
      */
-    #[ORM\OneToMany(targetEntity: VisitVisiteur::class, mappedBy: 'visite')]
+    #[ORM\OneToMany(targetEntity: VisitVisiteur::class, mappedBy: 'visite', cascade: ['persist', 'remove'])] // Ajout de cascade pour la gestion des relations
+    // Ajout de 'visite:detail' pour gérer la récursion
+    #[Groups(['visite:item', 'visite:detail'])]
     private Collection $visitVisiteurs;
 
     public function __construct()
@@ -97,24 +127,24 @@ class Visite
         return $this;
     }
 
-    public function getDate(): ?\DateTime
+    public function getDate(): ?\DateTimeInterface // Utilisation de DateTimeInterface
     {
         return $this->date;
     }
 
-    public function setDate(\DateTime $date): static
+    public function setDate(\DateTimeInterface $date): static // Utilisation de DateTimeInterface
     {
         $this->date = $date;
 
         return $this;
     }
 
-    public function getHeureDebut(): ?\DateTime
+    public function getHeureDebut(): ?\DateTimeInterface // Utilisation de DateTimeInterface
     {
         return $this->heureDebut;
     }
 
-    public function setHeureDebut(\DateTime $heureDebut): static
+    public function setHeureDebut(\DateTimeInterface $heureDebut): static // Utilisation de DateTimeInterface
     {
         $this->heureDebut = $heureDebut;
 
@@ -133,12 +163,12 @@ class Visite
         return $this;
     }
 
-    public function getHeureFin(): ?\DateTime
+    public function getHeureFin(): ?\DateTimeInterface // Utilisation de DateTimeInterface
     {
         return $this->heureFin;
     }
 
-    public function setHeureFin(\DateTime $heureFin): static
+    public function setHeureFin(\DateTimeInterface $heureFin): static // Utilisation de DateTimeInterface
     {
         $this->heureFin = $heureFin;
 
@@ -153,6 +183,18 @@ class Visite
     public function setCommentaire(string $commentaire): static
     {
         $this->commentaire = $commentaire;
+
+        return $this;
+    }
+
+    public function getCommentaireFin(): ?string
+    {
+        return $this->commentaireFin;
+    }
+
+    public function setCommentaireFin(?string $commentaireFin): self
+    {
+        $this->commentaireFin = $commentaireFin;
 
         return $this;
     }
@@ -172,6 +214,8 @@ class Visite
     /**
      * @return Collection<int, VisitVisiteur>
      */
+    // Le groupe 'visite:item' est bien là. Nous avons ajouté 'visite:detail' pour la récursion.
+    #[Groups(['visite:item', 'visite:detail'])]
     public function getVisitVisiteurs(): Collection
     {
         return $this->visitVisiteurs;
@@ -190,6 +234,7 @@ class Visite
     public function removeVisitVisiteur(VisitVisiteur $visitVisiteur): static
     {
         if ($this->visitVisiteurs->removeElement($visitVisiteur)) {
+            // set the owning side to null (unless already changed)
             if ($visitVisiteur->getVisite() === $this) {
                 $visitVisiteur->setVisite(null);
             }
@@ -198,8 +243,7 @@ class Visite
         return $this;
     }
 
-    // remplire le tableau des visiteurs sélectionnés
-    
+    // Suppression de la propriété et des méthodes pour $visiteursSelectionnes
     private ?array $visiteursSelectionnes = [];
 
     public function getVisiteursSelectionnes(): ?array

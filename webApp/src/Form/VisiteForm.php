@@ -7,6 +7,8 @@ use App\Entity\Visite;
 use App\Entity\Visiteur;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\TimeType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -22,9 +24,18 @@ class VisiteForm extends AbstractType
             ->add('pays')
             ->add('lieu')
             ->add('date')
-            ->add('heureDebut')
-            ->add('duree')
-            ->add('heureFin')
+            ->add('heureDebut', TimeType::class, [
+                'input' => 'datetime',
+                'widget' => 'single_text',
+            ])
+            ->add('duree', null, [
+                'attr' => ['step' => '1'],
+            ])
+            ->add('heureFin', TimeType::class, [
+                'input' => 'datetime',
+                'widget' => 'single_text',
+                'attr' => ['readonly' => true],
+            ])
             ->add('commentaire')
             ->add('guide', EntityType::class, [
                 'class' => Guide::class,
@@ -40,7 +51,7 @@ class VisiteForm extends AbstractType
                 'mapped' => false,
                 'required' => false,
                 'label' => 'Visiteurs participant à la visite',
-                'data' => $visite->getVisiteursSelectionnes(), // 💡 Cette ligne est la clé
+                'data' => $visite->getVisiteursSelectionnes(),
             ]);
     }
 

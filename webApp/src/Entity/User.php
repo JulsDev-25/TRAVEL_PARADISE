@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Guide;
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -52,6 +53,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->email = $email;
 
+        return $this;
+    }
+
+    //Relation avec l'entité Guide
+    #[ORM\OneToOne(targetEntity: Guide::class, inversedBy: 'user', cascade: ['persist', 'remove'])]
+    private ?Guide $guide = null;
+
+    public function getGuide(): ?Guide
+    {
+        return $this->guide;
+    }
+
+    public function setGuide(?Guide $guide): self
+    {
+        $this->guide = $guide;
         return $this;
     }
 

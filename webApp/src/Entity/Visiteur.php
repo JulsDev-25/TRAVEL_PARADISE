@@ -7,6 +7,7 @@ use App\Repository\VisiteurRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: VisiteurRepository::class)]
 class Visiteur
@@ -14,12 +15,15 @@ class Visiteur
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['visite:read', 'visite:item'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['visite:read', 'visite:item'])]
     private ?string $nom = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['visite:read', 'visite:item'])]
     private ?string $prenom = null;
 
     /**
