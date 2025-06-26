@@ -1,49 +1,61 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Visite index{% endblock %}
+{% block title %}Liste des visites{% endblock %}
 
 {% block body %}
-    <h1>Visite index</h1>
+    {# alert de notification #}
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fermer"></button>
+        </div>
+    {% endfor %}
 
-    <table class="table">
-        <thead>
+    <h1 class="mb-4">Liste des visites</h1>
+
+    <a href="{{ path('app_visite_new') }}" class="btn btn-success mb-3">Créer une nouvelle visite</a>
+
+    <table class="table table-striped table-bordered align-middle">
+        <thead class="table-dark">
             <tr>
-                <th>Id</th>
+                <th>ID</th>
                 <th>Photo</th>
                 <th>Pays</th>
                 <th>Lieu</th>
                 <th>Date</th>
-                <th>HeureDebut</th>
-                <th>Duree</th>
-                <th>HeureFin</th>
+                <th>Heure début</th>
+                <th>Durée</th>
+                <th>Heure fin</th>
                 <th>Commentaire</th>
-                <th>actions</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
-        {% for visite in visites %}
-            <tr>
-                <td>{{ visite.id }}</td>
-                <td><img src="{{ visite.photo }}" height="50" alt="Image_de_la_visite"></td>
-                <td>{{ visite.pays }}</td>
-                <td>{{ visite.lieu }}</td>
-                <td>{{ visite.date ? visite.date|date('Y-m-d') : '' }}</td>
-                <td>{{ visite.heureDebut ? visite.heureDebut|date('H:i:s') : '' }}</td>
-                <td>{{ visite.duree }}</td>
-                <td>{{ visite.heureFin ? visite.heureFin|date('H:i:s') : '' }}</td>
-                <td>{{ visite.commentaire }}</td>
-                <td>
-                    <a href="{{ path('app_visite_show', {'id': visite.id}) }}">show</a>
-                    <a href="{{ path('app_visite_edit', {'id': visite.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="10">no records found</td>
-            </tr>
-        {% endfor %}
+            {% for visite in visites %}
+                <tr>
+                    <td>{{ visite.id }}</td>
+                    <td>
+                        {% if visite.photo %}
+                            <img src="{{ visite.photo }}" height="50" alt="Image">
+                        {% endif %}
+                    </td>
+                    <td>{{ visite.pays }}</td>
+                    <td>{{ visite.lieu }}</td>
+                    <td>{{ visite.date ? visite.date|date('Y-m-d') : '' }}</td>
+                    <td>{{ visite.heureDebut ? visite.heureDebut|date('H:i') : '' }}</td>
+                    <td>{{ visite.duree }}</td>
+                    <td>{{ visite.heureFin ? visite.heureFin|date('H:i') : '' }}</td>
+                    <td>{{ visite.commentaire }}</td>
+                    <td>
+                        <a href="{{ path('app_visite_show', {'id': visite.id}) }}" class="btn btn-sm btn-primary">Voir</a>
+                        <a href="{{ path('app_visite_edit', {'id': visite.id}) }}" class="btn btn-sm btn-warning">Modifier</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="10" class="text-center">Aucune visite trouvée.</td>
+                </tr>
+            {% endfor %}
         </tbody>
     </table>
-
-    <a href="{{ path('app_visite_new') }}">Create new</a>
 {% endblock %}

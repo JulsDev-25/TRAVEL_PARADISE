@@ -1,41 +1,38 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}VisitVisiteur index{% endblock %}
+{% block title %}Présence des visiteurs{% endblock %}
 
 {% block body %}
-    <h1>VisitVisiteur index</h1>
+    <h1 class="mb-2">Présences des visiteurs aux visites</h1>
 
-    <table class="table">
-        <thead>
+    <a href="{{ path('app_visit_visiteur_new') }}" class="my-3 btn btn-success">Ajouter une présence</a>
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
             <tr>
                 <th>Id</th>
                 <th>Visiteur</th>
                 <th>Visite</th>
-                <th>Present</th>
+                <th>Présent</th>
                 <th>Commentaire</th>
-                <th>actions</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
         {% for visit_visiteur in visit_visiteurs %}
             <tr>
                 <td>{{ visit_visiteur.id }}</td>
-                <td>{{ visit_visiteur.visiteur.id }} - {{ visit_visiteur.visiteur.nom }}</td>
-                <td>{{ visit_visiteur.visite.id }} - {{ visit_visiteur.visite.lieu }}</td>
-                <td>{{ visit_visiteur.present ? 'Yes' : 'No' }}</td>
+                <td>{{ visit_visiteur.visiteur.nom }} {{ visit_visiteur.visiteur.prenom }}</td>
+                <td>{{ visit_visiteur.visite.lieu }} ({{ visit_visiteur.visite.date|date('Y-m-d') }})</td>
+                <td>{{ visit_visiteur.present ? 'Oui' : 'Non' }}</td>
                 <td>{{ visit_visiteur.commentaire }}</td>
                 <td>
-                    <a href="{{ path('app_visit_visiteur_show', {'id': visit_visiteur.id}) }}">show</a>
-                    <a href="{{ path('app_visit_visiteur_edit', {'id': visit_visiteur.id}) }}">edit</a>
+                    <a href="{{ path('app_visit_visiteur_show', {'id': visit_visiteur.id}) }}" class="btn btn-sm btn-primary">Afficher</a>
+                    <a href="{{ path('app_visit_visiteur_edit', {'id': visit_visiteur.id}) }}" class="btn btn-sm btn-warning">Modifier</a>
                 </td>
             </tr>
         {% else %}
-            <tr>
-                <td colspan="4">no records found</td>
-            </tr>
+            <tr><td colspan="6" class="text-center">Aucun enregistrement trouvé.</td></tr>
         {% endfor %}
         </tbody>
     </table>
-
-    <a href="{{ path('app_visit_visiteur_new') }}">Create new</a>
 {% endblock %}

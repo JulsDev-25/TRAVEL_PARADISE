@@ -1,4 +1,19 @@
-{{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
+{{ form_start(form, {'attr': {'class': 'needs-validation'}}) }}
+    <div class="mb-3">
+        {{ form_label(form.visiteur) }}
+        {{ form_widget(form.visiteur, {'attr': {'class': 'form-select'}}) }}
+    </div>
+    <div class="mb-3">
+        {{ form_label(form.visite) }}
+        {{ form_widget(form.visite, {'attr': {'class': 'form-select'}}) }}
+    </div>
+    <div class="form-check mb-3">
+        {{ form_widget(form.present, {'attr': {'class': 'form-check-input'}}) }}
+        {{ form_label(form.present, null, {'label_attr': {'class': 'form-check-label'}}) }}
+    </div>
+    <div class="mb-3">
+        {{ form_label(form.commentaire) }}
+        {{ form_widget(form.commentaire, {'attr': {'class': 'form-control'}}) }}
+    </div>
+    <button class="btn btn-primary">{{ button_label|default('Enregistrer') }}</button>
 {{ form_end(form) }}

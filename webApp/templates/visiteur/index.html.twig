@@ -1,17 +1,18 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Visiteur index{% endblock %}
+{% block title %}Liste des visiteurs{% endblock %}
 
 {% block body %}
-    <h1>Visiteur index</h1>
+    <h1 class="mb-2">Liste des visiteurs</h1>
 
-    <table class="table">
-        <thead>
+    <a href="{{ path('app_visiteur_new') }}" class="btn btn-success my-3">Créer un nouveau visiteur</a>
+    <table class="table table-hover">
+        <thead class="table-dark">
             <tr>
                 <th>Id</th>
                 <th>Nom</th>
-                <th>Prenom</th>
-                <th>actions</th>
+                <th>Prénom</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -21,17 +22,14 @@
                 <td>{{ visiteur.nom }}</td>
                 <td>{{ visiteur.prenom }}</td>
                 <td>
-                    <a href="{{ path('app_visiteur_show', {'id': visiteur.id}) }}">show</a>
-                    <a href="{{ path('app_visiteur_edit', {'id': visiteur.id}) }}">edit</a>
+                    <a href="{{ path('app_visiteur_show', {'id': visiteur.id}) }}" class="btn btn-sm btn-primary">Afficher</a>
+                    <a href="{{ path('app_visiteur_edit', {'id': visiteur.id}) }}" class="btn btn-sm btn-warning">Modifier</a>
                 </td>
             </tr>
         {% else %}
-            <tr>
-                <td colspan="4">no records found</td>
-            </tr>
+            <tr><td colspan="4" class="text-center">Aucun visiteur trouvé.</td></tr>
         {% endfor %}
         </tbody>
     </table>
 
-    <a href="{{ path('app_visiteur_new') }}">Create new</a>
 {% endblock %}

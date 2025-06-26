@@ -1,4 +1,101 @@
-{{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
+{{ form_start(form, {'attr': {'class': 'needs-validation', 'novalidate': 'novalidate'}}) }}
+
+<div class="row">
+    <div class="col-md-6 mb-3">
+        {{ form_row(form.photo) }}
+    </div>
+    <div class="col-md-6 mb-3">
+        {{ form_row(form.pays) }}
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6 mb-3">
+        {{ form_row(form.lieu) }}
+    </div>
+    <div class="col-md-6 mb-3">
+        {{ form_row(form.date) }}
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4 mb-3">
+        {{ form_row(form.heureDebut) }}
+    </div>
+    <div class="col-md-4 mb-3">
+        {{ form_row(form.duree) }}
+    </div>
+    <div class="col-md-4 mb-3">
+        {{ form_row(form.heureFin) }}
+    </div>
+</div>
+
+<div class="mb-3">
+    {{ form_row(form.commentaire) }}
+</div>
+
+<div class="mb-3">
+    {{ form_row(form.guide) }}
+</div>
+
+<div class="card border-secondary mb-4">
+    <div class="card-header bg-secondary text-white">
+        <strong>Visiteurs participant à la visite</strong>
+    </div>
+    <div class="card-body">
+        {% if form.visiteursSelectionnes is defined %}
+            <div class="row">
+                {{ form_row(form.visiteursSelectionnes) }}
+            </div>
+        {% else %}
+            <p class="text-muted">Aucun visiteur à afficher.</p>
+        {% endif %}
+    </div>
+</div>
+
+<h5>Visiteurs préselectionnés :</h5>
+{% for v in visite.visiteursSelectionnes %}
+    <p class="text-success mb-1">✅ {{ v.nom }} {{ v.prenom }}</p>
+{% endfor %}
+
+<button type="submit" class="btn btn-primary mt-3">
+    {{ button_label|default('Enregistrer') }}
+</button>
+
+{# SCRIPT DE CALCUL JS #}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const heureDebutInput = document.querySelector('#{{ form.heureDebut.vars.id }}');
+    const dureeInput = document.querySelector('#{{ form.duree.vars.id }}');
+    const heureFinInput = document.querySelector('#{{ form.heureFin.vars.id }}');
+
+    function updateHeureFin() {
+        const heureDebut = heureDebutInput.value;
+        const duree = parseFloat(dureeInput.value);
+
+        if (heureDebut && !isNaN(duree)) {
+            const [hours, minutes] = heureDebut.split(':').map(Number);
+            const date = new Date();
+            date.setHours(hours);
+            date.setMinutes(minutes);
+            date.setSeconds(0);
+
+            date.setHours(date.getHours() + Math.floor(duree));
+            date.setMinutes(date.getMinutes() + Math.round((duree % 1) * 60));
+
+            const hh = String(date.getHours()).padStart(2, '0');
+            const mm = String(date.getMinutes()).padStart(2, '0');
+            heureFinInput.value = `${hh}:${mm}`;
+        }
+    }
+
+    if (heureDebutInput && dureeInput && heureFinInput) {
+        heureDebutInput.addEventListener('input', updateHeureFin);
+        dureeInput.addEventListener('input', updateHeureFin);
+    } else {
+        console.warn("Champs introuvables !");
+    }
+});
+</script>
+
 {{ form_end(form) }}

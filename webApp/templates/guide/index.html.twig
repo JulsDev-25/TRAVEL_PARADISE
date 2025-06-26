@@ -1,43 +1,47 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Guide index{% endblock %}
+{% block title %}Liste des guides{% endblock %}
 
 {% block body %}
-    <h1>Guide index</h1>
+    <h1 class="mb-4">Guides</h1>
 
-    <table class="table">
-        <thead>
+    <a href="{{ path('app_guide_new') }}" class="btn btn-success mb-3">Ajouter un guide</a>
+
+    <table class="table table-hover table-bordered align-middle">
+        <thead class="table-dark">
             <tr>
-                <th>Id</th>
+                <th>ID</th>
                 <th>Photo</th>
                 <th>Nom</th>
-                <th>Prenom</th>
-                <th>Statut(actif)</th>
+                <th>Prénom</th>
+                <th>Actif</th>
                 <th>Pays</th>
-                <th>actions</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
         {% for guide in guides %}
             <tr>
                 <td>{{ guide.id }}</td>
-                <td><img src="{{ guide.photo }}" width="100" alt="Photo_guide"></td>
+                <td><img src="{{ guide.photo }}" width="80" alt="Photo guide"></td>
                 <td>{{ guide.nom }}</td>
                 <td>{{ guide.prenom }}</td>
-                <td>{{ guide.statut ? 'Yes' : 'No' }}</td>
+                <td>
+                    <span class="badge bg-{{ guide.statut ? 'success' : 'secondary' }}">
+                        {{ guide.statut ? 'Oui' : 'Non' }}
+                    </span>
+                </td>
                 <td>{{ guide.pays }}</td>
                 <td>
-                    <a href="{{ path('app_guide_show', {'id': guide.id}) }}">show</a>
-                    <a href="{{ path('app_guide_edit', {'id': guide.id}) }}">edit</a>
+                    <a href="{{ path('app_guide_show', {'id': guide.id}) }}" class="btn btn-sm btn-primary">Voir</a>
+                    <a href="{{ path('app_guide_edit', {'id': guide.id}) }}" class="btn btn-sm btn-warning">Modifier</a>
                 </td>
             </tr>
         {% else %}
             <tr>
-                <td colspan="7">no records found</td>
+                <td colspan="7" class="text-center">Aucun guide trouvé.</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
-
-    <a href="{{ path('app_guide_new') }}">Create new</a>
 {% endblock %}

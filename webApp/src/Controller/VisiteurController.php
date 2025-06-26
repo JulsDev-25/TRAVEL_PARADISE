@@ -44,6 +44,7 @@ final class VisiteurController extends AbstractController
         return $this->render('visiteur/new.html.twig', [
             'visiteur' => $visiteur,
             'form' => $form,
+            'button_label' => 'Create',
         ]);
     }
 
@@ -70,6 +71,7 @@ final class VisiteurController extends AbstractController
         return $this->render('visiteur/edit.html.twig', [
             'visiteur' => $visiteur,
             'form' => $form,
+            'button_label' => 'Update',
         ]);
     }
 
