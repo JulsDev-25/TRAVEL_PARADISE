@@ -1,34 +1,186 @@
-{% extends 'base.html.twig' %}
+<!DOCTYPE html>
+<html lang="fr">
+	<head>
+		<meta charset="UTF-8">
+		<title>Connexion | Travel Paradise</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+		<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+		<style>:root
+		{
+			--primary-color: #003366;
+			--primary-light: #1a4d7a;
+			--primary-dark: #001a33;
+			--accent-color: #00a8cc;
+			--accent-warm: #ff7b54;
+			--text-light: #e8f4f8;
+			--text-muted: #b8d4e3;
+			--bg-blur: rgba(0, 36, 71, 0.7);
+		}
 
-{% block title %}Log in!{% endblock %}
+		* {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+		}
 
-{% block body %}
-<form method="post">
-    {% if error %}
-        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-    {% endif %}
+		body,
+		html {
+			height: 100%;
+			width: 100vw;
+			font-family: 'Inter', sans-serif;
+			background: linear-gradient(135deg, rgba(0, 51, 102, 0.7), rgba(0, 168, 204, 0.5), rgba(0, 51, 102, 0.8)), url('{{ asset("images/background.jpg") }}') center/cover no-repeat;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			color: var(--text-light);
+		}
 
-    {% if app.user %}
-        <div class="mb-3">
-            You are logged in as {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Logout</a>
-        </div>
-    {% endif %}
+		.main-connexion {
+			display: flex;
+			width: 680px;
+			border-radius: 20px;
+			align-items: center;
+			background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.3)), url('{{ asset("images/bg.png") }}') center/cover no-repeat;
+			box-shadow: 0 10px 30px rgba(0, 168, 204, 0.6);
+		}
+		.mokup {
+			height: 100%;
+			width: 90%;
+			display: flex;
+      flex-direction: column;
+			align-items: center;
+			justify-content: center;
+		}
+		.login-container {
+			background-color: var(--bg-blur);
+			backdrop-filter: blur(5px);
+			padding: 2rem;
+			border-radius: 20px;
+			max-width: 380px;
+			width: 100%;
+			z-index: 2;
+			position: relative;
+		}
 
-    <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
-    <label for="inputEmail">Email</label>
-    <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" autocomplete="email" required autofocus>
-    <label for="inputPassword">Password</label>
-    <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
-    <input type="hidden" name="_csrf_token" data-controller="csrf-protection" value="{{ csrf_token('authenticate') }}">
+		.login-container h1,
+    .mokup h1 {
+			font-family: 'Poppins', sans-serif;
+			font-size: 2rem;
+			text-align: center;
+			margin-bottom: 1.5rem;
+		}
 
-    <div class="checkbox mb-3">
-        <label>
-            <input type="checkbox" name="_remember_me"> Remember me
-        </label>
-    </div>
+    .mokup h1 {
+      font-size: 1.3rem;
+    }
 
-    <button class="btn btn-lg btn-primary" type="submit">
-        Sign in
-    </button>
-</form>
-{% endblock %}
+		form {
+			display: flex;
+			flex-direction: column;
+		}
+
+		label {
+			font-weight: 600;
+			margin-bottom: 0.3rem;
+			color: var(--text-muted);
+		}
+
+		input[type="email"],
+		input[type="password"] {
+			padding: 0.8rem;
+			border: none;
+			border-radius: 10px;
+			margin-bottom: 1.2rem;
+			font-size: 1rem;
+			background-color: rgba(255, 255, 255, 0.1);
+			color: white;
+		}
+
+		input[type="email"]::placeholder,
+		input[type="password"]::placeholder {
+			color: #cbdce2;
+		}
+
+		button {
+			background-color: var(--primary-light);
+			color: white;
+			margin-top: 15px;
+			margin-bottom: 15px;
+			padding: 0.8rem;
+			border: none;
+			border-radius: 30px;
+			font-size: 1rem;
+			font-weight: 600;
+			cursor: pointer;
+			transition: background-color 0.3s ease;
+		}
+
+		button:hover {
+			background-color: var(--accent-color);
+		}
+
+		.error {
+			background-color: rgba(255, 0, 0, 0.2);
+			color: #ffcccc;
+			padding: 0.5rem 1rem;
+			border-radius: 8px;
+			margin-bottom: 1rem;
+			text-align: center;
+		}
+
+		.logo {
+			border-radius: 20px;
+			z-index: 999;
+			box-shadow: 0 10px 30px rgba(0, 168, 204, 0.6);
+			width: 80px;
+			transform: translateY(-20px);
+			animation: logoFloat 3s ease-in-out infinite;
+			transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+		}
+
+		@keyframes logoFloat {
+			0,
+			100% {
+				transform: translateY(0px);
+			}
+			50% {
+				transform: translateY(-10px);
+			}
+		}
+
+		@media(max-width: 500px) {
+			.login-container {
+				margin: 0 1rem;
+			}
+		}
+	</style>
+</head>
+<body>
+	<div class="main-connexion">
+		<div class="mokup">
+			<img src="{{ asset('img/logo.png') }}" class="logo" alt="Logo Travel Paradise">
+      <h1>TRAVEL PARADISE</h1>
+		</div>
+		<div class="login-container">
+			<h1>Connexion</h1>
+
+			{% if error %}
+				<div class="error">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+			{% endif %}
+
+			<form method="post">
+
+				<label for="inputEmail">Email</label>
+				<input type="email" id="inputEmail" name="email" required autofocus placeholder="Votre adresse email" value="{{ last_username }}">
+
+				<label for="inputPassword">Mot de passe</label>
+				<input type="password" id="inputPassword" name="password" required placeholder="••••••••">
+
+				<input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+				<button type="submit">Se connecter</button>
+			</form>
+		</div>
+	</div>
+</body></html>
